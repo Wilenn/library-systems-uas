@@ -1,54 +1,38 @@
-{{-- Dipakai create dan edit. $user bernilai null saat membuat user baru. --}}
+{{-- Dipakai create dan edit. $user bernilai null saat membuat pengguna baru. --}}
 @php($isSelf = $user && $user->is(auth()->user()))
 
-<div style="margin-bottom: 12px;">
-    <label for="name">Nama</label><br>
-    <input type="text" id="name" name="name" value="{{ old('name', $user?->name) }}">
-    @error('name')
-        <p style="color: red; margin: 4px 0;">{{ $message }}</p>
-    @enderror
-</div>
+<div class="space-y-4">
+    <x-field name="name" label="Nama" :value="$user?->name" required />
 
-<div style="margin-bottom: 12px;">
-    <label for="email">Email</label><br>
-    <input type="email" id="email" name="email" value="{{ old('email', $user?->email) }}">
-    @error('email')
-        <p style="color: red; margin: 4px 0;">{{ $message }}</p>
-    @enderror
-</div>
+    <x-field name="email" label="Email" type="email" :value="$user?->email" required />
 
-<div style="margin-bottom: 12px;">
-    <label for="role">Role</label><br>
     @if ($isSelf)
         {{-- Role akun sendiri tidak bisa diubah; dikirim lewat hidden input agar lolos validasi. --}}
-        {{ ucfirst($user->role) }} (role akun sendiri tidak dapat diubah)
-        <input type="hidden" name="role" value="{{ $user->role }}">
+        <div>
+            <p class="mb-1 text-sm font-medium text-stone-700">Role</p>
+            <p class="text-sm text-stone-600">
+                {{ ucfirst($user->role) }}
+                <span class="text-stone-400">(role akun sendiri tidak dapat diubah)</span>
+            </p>
+            <input type="hidden" name="role" value="{{ $user->role }}">
+        </div>
     @else
-        <select name="role" id="role">
+        <x-field name="role" label="Role" type="select" required>
             @foreach (\App\Models\User::ROLES as $role)
                 <option value="{{ $role }}" @selected(old('role', $user?->role ?? \App\Models\User::ROLE_PETUGAS) === $role)>
                     {{ ucfirst($role) }}
                 </option>
             @endforeach
-        </select>
+        </x-field>
     @endif
-    @error('role')
-        <p style="color: red; margin: 4px 0;">{{ $message }}</p>
-    @enderror
+
+    <x-field name="password" label="Password" type="password" :required="! $user" autocomplete="new-password"
+        :hint="$user ? 'Kosongkan jika tidak ingin mengubah password.' : 'Minimal 8 karakter.'" />
+
+    <x-field name="password_confirmation" label="Konfirmasi password" type="password" autocomplete="new-password" />
 </div>
 
-<div style="margin-bottom: 12px;">
-    <label for="password">Password @if ($user) (kosongkan jika tidak diubah) @endif</label><br>
-    <input type="password" id="password" name="password" autocomplete="new-password">
-    @error('password')
-        <p style="color: red; margin: 4px 0;">{{ $message }}</p>
-    @enderror
+<div class="mt-6 flex items-center gap-2">
+    <x-button type="submit">Simpan</x-button>
+    <x-button :href="route('users.index')" variant="secondary">Batal</x-button>
 </div>
-
-<div style="margin-bottom: 12px;">
-    <label for="password_confirmation">Konfirmasi Password</label><br>
-    <input type="password" id="password_confirmation" name="password_confirmation" autocomplete="new-password">
-</div>
-
-<button type="submit">Simpan</button>
-<a href="{{ route('users.index') }}">Batal</a>
