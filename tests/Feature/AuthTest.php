@@ -26,7 +26,7 @@ class AuthTest extends TestCase
             'password' => 'password',
         ]);
 
-        $response->assertRedirect(route('dashboard'));
+        $response->assertRedirect(route('books.index'));
         $response->assertSessionHas('success');
         $this->assertAuthenticatedAs($user);
     }
