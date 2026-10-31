@@ -10,27 +10,35 @@ class BookSeeder extends Seeder
 {
     /**
      * Aman dijalankan berulang kali: buku dicari berdasarkan judul, dan
-     * buku yang sudah ada tidak diubah (stok hasil edit tidak tertimpa).
+     * buku yang sudah ada tidak diubah.
      */
     public function run(): void
     {
         $books = [
-            ['title' => 'Pemrograman PHP', 'author' => 'Andi', 'year' => 2024, 'stock' => 5, 'category' => 'Pendidikan'],
-            ['title' => 'Bumi', 'author' => 'Tere Liye', 'year' => 2014, 'stock' => 4, 'category' => 'Fantasi & Petualangan'],
-            ['title' => 'Pulang', 'author' => 'Tere Liye', 'year' => 2015, 'stock' => 6, 'category' => 'Fiksi'],
-            ['title' => 'Perahu Kertas', 'author' => 'Dee Lestari', 'year' => 2009, 'stock' => 3, 'category' => 'Romansa'],
-            ['title' => 'Dilan: Dia adalah Dilanku Tahun 1990', 'author' => 'Pidi Baiq', 'year' => 2014, 'stock' => 7, 'category' => 'Romansa'],
+            ['Laskar Pelangi', 'Andrea Hirata', 2005, 5, 'Fiksi'],
+            ['Pulang', 'Tere Liye', 2015, 6, 'Fiksi'],
+            ['Negeri 5 Menara', 'Ahmad Fuadi', 2009, 4, 'Fiksi'],
+            ['Bumi Manusia', 'Pramoedya Ananta Toer', 1980, 3, 'Fiksi'],
+            ['Sapiens', 'Yuval Noah Harari', 2011, 4, 'Non-Fiksi'],
+            ['Pemrograman PHP', 'Andi', 2024, 5, 'Pendidikan'],
+            ['One Piece Vol. 1', 'Eiichiro Oda', 1997, 7, 'Komik & Manga'],
+            ['Perahu Kertas', 'Dee Lestari', 2009, 3, 'Romansa'],
+            ['Dilan: Dia adalah Dilanku Tahun 1990', 'Pidi Baiq', 2014, 7, 'Romansa'],
+            ['Bumi', 'Tere Liye', 2014, 4, 'Fantasi & Petualangan'],
+            ['Filosofi Teras', 'Henry Manampiring', 2018, 6, 'Pengembangan Diri'],
+            ['Atomic Habits', 'James Clear', 2018, 5, 'Pengembangan Diri'],
+            ['Hujan Bulan Juni', 'Sapardi Djoko Damono', 1994, 2, 'Puisi & Musik'],
         ];
 
-        foreach ($books as $data) {
-            $category = Category::firstOrCreate(['name' => $data['category']]);
+        foreach ($books as [$title, $author, $year, $stock, $categoryName]) {
+            $category = Category::firstOrCreate(['name' => $categoryName]);
 
             Book::firstOrCreate(
-                ['title' => $data['title']],
+                ['title' => $title],
                 [
-                    'author' => $data['author'],
-                    'year' => $data['year'],
-                    'stock' => $data['stock'],
+                    'author' => $author,
+                    'year' => $year,
+                    'stock' => $stock,
                     'category_id' => $category->id,
                 ]
             );
