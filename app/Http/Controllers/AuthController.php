@@ -21,7 +21,7 @@ class AuthController extends Controller
         if (Auth::attempt($credentials)) {
             $request->session()->regenerate();
 
-            return redirect()->intended(route('books.index'))
+            return redirect()->intended(route('dashboard'))
                 ->with('success', 'Login berhasil. Selamat datang, '.Auth::user()->name.'!');
         }
 

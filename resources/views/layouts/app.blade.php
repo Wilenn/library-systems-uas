@@ -16,7 +16,10 @@
         <a href="{{ route('categories.index') }}">Categories</a> |
         <a href="{{ route('members.index') }}">Members</a>
         @auth
-            |
+            @if (auth()->user()->isAdmin())
+                | <a href="{{ route('users.index') }}">Users</a>
+            @endif
+            | {{ auth()->user()->name }} ({{ auth()->user()->role }}) |
             <form action="{{ route('logout') }}" method="POST" style="display:inline;">
                 @csrf
                 <button type="submit">Logout</button>
@@ -30,6 +33,12 @@
         @if (session('success'))
             <div id="notif" style="background:#d4edda; color:#155724; border:1px solid #c3e6cb; padding:10px 14px; margin-bottom:14px; border-radius:4px;">
                 {{ session('success') }}
+            </div>
+        @endif
+
+        @if (session('error'))
+            <div style="background:#f8d7da; color:#721c24; border:1px solid #f5c6cb; padding:10px 14px; margin-bottom:14px; border-radius:4px;">
+                {{ session('error') }}
             </div>
         @endif
 
