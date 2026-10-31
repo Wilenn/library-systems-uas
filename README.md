@@ -25,7 +25,7 @@ cp .env.example .env
 php artisan key:generate
 ```
 
-4. Buat database MySQL bernama `library-system`, lalu sesuaikan `DB_USERNAME` dan `DB_PASSWORD` di `.env`.
+4. Buat database MySQL bernama `library-system-uas`, lalu sesuaikan `DB_USERNAME` dan `DB_PASSWORD` di `.env`.
 
 5. Jalankan migration dan seeder:
 
@@ -41,10 +41,10 @@ php artisan serve
 
 ## Akun contoh (hanya untuk pengembangan lokal)
 
-| Email | Password |
-|---|---|
-| admin@example.com | password123 |
-| test@example.com | password |
+| Email | Password | Role |
+|---|---|---|
+| admin@example.com | password | admin |
+| petugas@example.com | password | petugas |
 
 Ganti atau hapus akun ini sebelum aplikasi dipakai di luar lokal.
 
