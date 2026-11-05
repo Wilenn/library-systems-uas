@@ -6,6 +6,7 @@ Simple Library Information System (Laravel + Blade + MySQL).
 
 * PHP ^8.3
 * Composer
+* Node.js dan npm (untuk build Tailwind/Vite)
 * MySQL
 * Laravel ^13
 
@@ -16,6 +17,8 @@ Simple Library Information System (Laravel + Blade + MySQL).
 
 ```
 composer install
+npm install
+npm run build
 ```
 
 3. Salin file environment dan buat app key:

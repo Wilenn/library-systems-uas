@@ -1,18 +1,17 @@
-{{-- Pagination polos tanpa CSS framework (project belum memakai Tailwind/Bootstrap). --}}
 @if ($paginator->hasPages())
-    <p>
+    <nav class="mt-4 flex items-center justify-between gap-3 text-sm text-stone-600" aria-label="Navigasi halaman">
         @if ($paginator->onFirstPage())
-            &laquo; Sebelumnya
+            <span class="rounded-md border border-stone-200 px-2.5 py-1.5 text-xs font-medium text-stone-400">&laquo; Sebelumnya</span>
         @else
-            <a href="{{ $paginator->previousPageUrl() }}">&laquo; Sebelumnya</a>
+            <x-button :href="$paginator->previousPageUrl()" variant="secondary" size="sm">&laquo; Sebelumnya</x-button>
         @endif
 
-        | Halaman {{ $paginator->currentPage() }} dari {{ $paginator->lastPage() }} |
+        <span>Halaman {{ $paginator->currentPage() }} dari {{ $paginator->lastPage() }}</span>
 
         @if ($paginator->hasMorePages())
-            <a href="{{ $paginator->nextPageUrl() }}">Berikutnya &raquo;</a>
+            <x-button :href="$paginator->nextPageUrl()" variant="secondary" size="sm">Berikutnya &raquo;</x-button>
         @else
-            Berikutnya &raquo;
+            <span class="rounded-md border border-stone-200 px-2.5 py-1.5 text-xs font-medium text-stone-400">Berikutnya &raquo;</span>
         @endif
-    </p>
+    </nav>
 @endif

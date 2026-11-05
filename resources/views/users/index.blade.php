@@ -1,50 +1,57 @@
 @extends('layouts.app')
 
+@section('title', 'Pengguna')
+@section('modern', '1')
+
 @section('content')
-    <h2>Daftar User</h2>
+    <x-page-header title="Pengguna" subtitle="Kelola akun admin dan petugas.">
+        <x-button :href="route('users.create')">Tambah pengguna</x-button>
+    </x-page-header>
 
-    <a href="{{ route('users.create') }}">+ Tambah User</a>
-
-    <table border="1" cellpadding="6" cellspacing="0">
-        <thead>
-            <tr>
-                <th>No</th>
-                <th>Nama</th>
-                <th>Email</th>
-                <th>Role</th>
-                <th>Aksi</th>
-            </tr>
-        </thead>
-        <tbody>
-            @forelse ($users as $user)
+    @if ($users->isEmpty())
+        <x-empty-state title="Belum ada pengguna" message="Tambahkan pengguna pertama untuk mulai." />
+    @else
+        <x-table>
+            <thead>
                 <tr>
-                    <td>{{ $users->firstItem() + $loop->index }}</td>
-                    <td>
-                        {{ $user->name }}
-                        @if ($user->is(auth()->user()))
-                            (Anda)
-                        @endif
-                    </td>
-                    <td>{{ $user->email }}</td>
-                    <td>{{ ucfirst($user->role) }}</td>
-                    <td>
-                        <a href="{{ route('users.edit', $user) }}">Edit</a>
-                        @unless ($user->is(auth()->user()))
-                            <form action="{{ route('users.destroy', $user) }}" method="POST" style="display:inline">
-                                @csrf
-                                @method('DELETE')
-                                <button type="submit" onclick="return confirm('Hapus user ini?')">Hapus</button>
-                            </form>
-                        @endunless
-                    </td>
+                    <th>Nama</th>
+                    <th>Email</th>
+                    <th>Role</th>
+                    <th>Aksi</th>
                 </tr>
-            @empty
-                <tr>
-                    <td colspan="5">Belum ada data user.</td>
-                </tr>
-            @endforelse
-        </tbody>
-    </table>
+            </thead>
+            <tbody>
+                @foreach ($users as $user)
+                    <tr>
+                        <td class="font-medium text-stone-900">
+                            {{ $user->name }}
+                            @if ($user->is(auth()->user()))
+                                <x-badge class="ml-1">Anda</x-badge>
+                            @endif
+                        </td>
+                        <td>{{ $user->email }}</td>
+                        <td>
+                            <x-badge :color="$user->isAdmin() ? 'brand' : 'neutral'">{{ ucfirst($user->role) }}</x-badge>
+                        </td>
+                        <td>
+                            <div class="flex items-center gap-2">
+                                <x-button :href="route('users.edit', $user)" variant="secondary" size="sm">Edit</x-button>
 
-    {{ $users->links('pagination.simple') }}
+                                @unless ($user->is(auth()->user()))
+                                    <form action="{{ route('users.destroy', $user) }}" method="POST">
+                                        @csrf
+                                        @method('DELETE')
+                                        <x-button type="submit" variant="danger" size="sm"
+                                            onclick="return confirm('Hapus pengguna ini?')">Hapus</x-button>
+                                    </form>
+                                @endunless
+                            </div>
+                        </td>
+                    </tr>
+                @endforeach
+            </tbody>
+        </x-table>
+
+        {{ $users->links('pagination.simple') }}
+    @endif
 @endsection

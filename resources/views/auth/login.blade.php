@@ -1,46 +1,21 @@
-<!DOCTYPE html>
-<html lang="id">
+@extends('layouts.guest')
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login Perpustakaan</title>
-</head>
+@section('title', 'Masuk')
 
-<body>
-    <h1>Login Sistem Perpustakaan</h1>
+@section('content')
+    <h1 class="text-lg font-semibold text-stone-900">Masuk</h1>
+    <p class="mb-5 mt-1 text-sm text-stone-500">Silakan masuk untuk mengelola perpustakaan.</p>
+
     @if (session('success'))
-        <div id="notif" style="background:#d4edda; color:#155724; border:1px solid #c3e6cb; padding:10px 14px; margin-bottom:14px; border-radius:4px;">
-            {{ session('success') }}
-        </div>
+        <x-alert class="mb-4" data-autodismiss>{{ session('success') }}</x-alert>
     @endif
-    @if ($errors->any())
-        <div>
-            @foreach ($errors->all() as $error)
-                <p>{{ $error }}</p>
-            @endforeach
-        </div>
-    @endif
-    <form action="{{ route('login.submit') }}" method="POST">
+
+    <form action="{{ route('login.submit') }}" method="POST" class="space-y-4">
         @csrf
-        <div>
-            <label for="email">Email</label>
-            <input type="email" name="email" id="email" value="{{ old('email') }}" required>
-        </div>
-        <div>
-            <label for="password">Password</label>
-            <input type="password" name="password" id="password" required>
-        </div>
-        <button type="submit">Login</button>
+
+        <x-field name="email" label="Email" type="email" required autofocus autocomplete="username" />
+        <x-field name="password" label="Password" type="password" required autocomplete="current-password" />
+
+        <x-button type="submit" class="w-full">Masuk</x-button>
     </form>
-    <script>
-        // Notifikasi hilang otomatis setelah 4 detik
-        const notif = document.getElementById('notif');
-        if (notif) {
-            setTimeout(() => notif.style.display = 'none', 4000);
-        }
-    </script>
-</body>
-
-</html>
-
+@endsection

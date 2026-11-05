@@ -32,8 +32,10 @@ Route::middleware('auth')->group(function () {
     Route::get('/members', [MemberController::class, 'index'])
         ->name('members.index');
 
-    // Hanya admin yang boleh mengelola user.
+    // Hanya admin yang boleh mengelola user dan mengubah kategori
+    // (petugas hanya boleh melihat daftar kategori).
     Route::middleware('role:admin')->group(function () {
         Route::resource('users', UserController::class)->except('show');
+        Route::resource('categories', CategoryController::class)->except(['index', 'show']);
     });
 });
