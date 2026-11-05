@@ -46,4 +46,19 @@ class Book extends Model
     {
         $query->where('stock', '>', 0);
     }
+
+    /** Cari berdasarkan judul atau penulis. Kosong berarti tidak memfilter. */
+    public function scopeSearch(Builder $query, ?string $term): void
+    {
+        $term = trim((string) $term);
+
+        if ($term === '') {
+            return;
+        }
+
+        $query->where(function (Builder $query) use ($term) {
+            $query->where('title', 'like', "%{$term}%")
+                ->orWhere('author', 'like', "%{$term}%");
+        });
+    }
 }

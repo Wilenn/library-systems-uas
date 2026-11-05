@@ -12,5 +12,8 @@ abstract class TestCase extends BaseTestCase
 
         // Test tidak bergantung pada hasil `npm run build`.
         $this->withoutVite();
+
+        // Pesan validasi diuji dalam Bahasa Indonesia, apa pun isi .env.
+        app()->setLocale('id');
     }
 }

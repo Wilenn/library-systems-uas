@@ -1,50 +1,91 @@
 @extends('layouts.app')
 
+@section('title', 'Buku')
+@section('modern', '1')
+
 @section('content')
-    <h2>Daftar Buku</h2>
+    @php($filtered = filled(request('q')) || filled(request('category')))
 
-    <a href="{{ route('books.create') }}">+ Tambah Buku</a>
+    <x-page-header title="Buku" subtitle="Kelola koleksi buku perpustakaan.">
+        <x-button :href="route('books.create')">Tambah buku</x-button>
+    </x-page-header>
 
-    <table border="1" cellpadding="6" cellspacing="0">
-        <thead>
-            <tr>
-                <th>No</th>
-                <th>Judul</th>
-                <th>Penulis</th>
-                <th>Kategori</th>
-                <th>Tahun</th>
-                <th>Stok</th>
-                <th>Aksi</th>
-            </tr>
-        </thead>
-        <tbody>
-            @forelse ($books as $book)
+    <form action="{{ route('books.index') }}" method="GET" class="mb-5 flex flex-wrap items-end gap-3">
+        <div class="w-full sm:w-72">
+            <x-field name="q" label="Cari" :value="request('q')" placeholder="Judul atau penulis" />
+        </div>
+
+        <div class="w-full sm:w-56">
+            <x-field name="category" label="Kategori" type="select">
+                <option value="">Semua kategori</option>
+                @foreach ($categories as $category)
+                    <option value="{{ $category->id }}" @selected((int) request('category') === $category->id)>{{ $category->name }}</option>
+                @endforeach
+            </x-field>
+        </div>
+
+        <div class="flex gap-2">
+            <x-button type="submit">Cari</x-button>
+            @if ($filtered)
+                <x-button :href="route('books.index')" variant="secondary">Reset</x-button>
+            @endif
+        </div>
+    </form>
+
+    @if ($books->isEmpty())
+        @if ($filtered)
+            <x-empty-state title="Buku tidak ditemukan" message="Coba kata kunci atau kategori lain.">
+                <x-button :href="route('books.index')" variant="secondary">Reset pencarian</x-button>
+            </x-empty-state>
+        @else
+            <x-empty-state title="Belum ada buku" message="Tambahkan buku pertama ke perpustakaan.">
+                <x-button :href="route('books.create')">Tambah buku</x-button>
+            </x-empty-state>
+        @endif
+    @else
+        <x-table>
+            <thead>
                 <tr>
-                    <td>{{ $books->firstItem() + $loop->index }}</td>
-                    <td>{{ $book->title }}</td>
-                    <td>{{ $book->author }}</td>
-                    <td>{{ $book->category?->name ?? 'Belum ada kategori' }}</td>
-                    <td>{{ $book->year }}</td>
-                    <td>{{ $book->stock }}</td>
-                    <td>
-                        <a href="{{ route('books.show', $book) }}">Detail</a>
-                        <a href="{{ route('books.edit', $book) }}">Edit</a>
-                        <form action="{{ route('books.destroy', $book) }}" method="POST" style="display:inline">
-                            @csrf
-                            @method('DELETE')
-                            <button type="submit" onclick="return confirm('Hapus buku ini?')">Hapus</button>
-                        </form>
-                    </td>
+                    <th>Buku</th>
+                    <th>Kategori</th>
+                    <th class="hidden sm:table-cell">Tahun</th>
+                    <th>Stok</th>
+                    <th>Aksi</th>
                 </tr>
-            @empty
-                <tr>
-                    <td colspan="7">Belum ada data buku.</td>
-                </tr>
-            @endforelse
-        </tbody>
-    </table>
+            </thead>
+            <tbody>
+                @foreach ($books as $book)
+                    <tr>
+                        <td>
+                            <a href="{{ route('books.show', $book) }}" class="font-medium text-stone-900 hover:text-brand-700">{{ $book->title }}</a>
+                            <p class="text-xs text-stone-500">{{ $book->author }}</p>
+                        </td>
+                        <td>{{ $book->category->name }}</td>
+                        <td class="hidden sm:table-cell">{{ $book->year }}</td>
+                        <td>
+                            @if ($book->stock > 0)
+                                <x-badge color="green">{{ $book->stock }}</x-badge>
+                            @else
+                                <x-badge color="red">Habis</x-badge>
+                            @endif
+                        </td>
+                        <td>
+                            <div class="flex items-center gap-2">
+                                <x-button :href="route('books.edit', $book)" variant="secondary" size="sm">Edit</x-button>
 
-    {{ $books->links('pagination.simple') }}
+                                <form action="{{ route('books.destroy', $book) }}" method="POST">
+                                    @csrf
+                                    @method('DELETE')
+                                    <x-button type="submit" variant="danger" size="sm"
+                                        onclick="return confirm('Hapus buku ini?')">Hapus</x-button>
+                                </form>
+                            </div>
+                        </td>
+                    </tr>
+                @endforeach
+            </tbody>
+        </x-table>
+
+        {{ $books->links('pagination.simple') }}
+    @endif
 @endsection
-
-

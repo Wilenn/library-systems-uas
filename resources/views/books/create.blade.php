@@ -1,59 +1,15 @@
 @extends('layouts.app')
 
+@section('title', 'Tambah buku')
+@section('modern', '1')
+
 @section('content')
-    <h2>Tambah Buku</h2>
+    <x-page-header title="Tambah buku" subtitle="Isi data buku baru dan tentukan kategorinya." />
 
-    <form action="{{ route('books.store') }}" method="POST">
-        @csrf
-
-        <div style="margin-bottom: 12px;">
-            <label for="title">Judul Buku</label><br>
-            <input type="text" id="title" name="title" value="{{ old('title') }}">
-            @error('title')
-                <p style="color: red; margin: 4px 0;">{{ $message }}</p>
-            @enderror
-        </div>
-
-        <div style="margin-bottom: 12px;">
-            <label for="author">Penulis</label><br>
-            <input type="text" id="author" name="author" value="{{ old('author') }}">
-            @error('author')
-                <p style="color: red; margin: 4px 0;">{{ $message }}</p>
-            @enderror
-        </div>
-
-        <div style="margin-bottom: 12px;">
-            <label for="category_id">Kategori</label><br>
-            <select name="category_id" id="category_id">
-                <option value="">Pilih kategori</option>
-                @foreach ($categories as $category)
-                    <option value="{{ $category->id }}" @selected(old('category_id') == $category->id)>
-                        {{ $category->name }}
-                    </option>
-                @endforeach
-            </select>
-            @error('category_id')
-                <p style="color: red; margin: 4px 0;">{{ $message }}</p>
-            @enderror
-        </div>
-
-        <div style="margin-bottom: 12px;">
-            <label for="year">Tahun Terbit</label><br>
-            <input type="text" id="year" name="year" value="{{ old('year') }}">
-            @error('year')
-                <p style="color: red; margin: 4px 0;">{{ $message }}</p>
-            @enderror
-        </div>
-
-        <div style="margin-bottom: 12px;">
-            <label for="stock">Stok</label><br>
-            <input type="text" id="stock" name="stock" value="{{ old('stock') }}">
-            @error('stock')
-                <p style="color: red; margin: 4px 0;">{{ $message }}</p>
-            @enderror
-        </div>
-
-        <button type="submit">Simpan</button>
-        <a href="{{ route('books.index') }}">Batal</a>
-    </form>
+    <x-card class="max-w-xl">
+        <form action="{{ route('books.store') }}" method="POST">
+            @csrf
+            @include('books._form', ['book' => null])
+        </form>
+    </x-card>
 @endsection
