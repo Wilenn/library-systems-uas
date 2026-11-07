@@ -29,8 +29,7 @@ Route::middleware('auth')->group(function () {
     Route::resource('books', BookController::class);
     Route::get('/categories', [CategoryController::class, 'index'])
         ->name('categories.index');
-    Route::get('/members', [MemberController::class, 'index'])
-        ->name('members.index');
+    Route::resource('members', MemberController::class);
 
     // Hanya admin yang boleh mengelola user dan mengubah kategori
     // (petugas hanya boleh melihat daftar kategori).
