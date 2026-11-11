@@ -49,5 +49,6 @@ return [
         'address' => 'alamat',
         'member_id' => 'anggota',
         'book_ids' => 'buku',
+        'book_ids.*' => 'buku',
     ],
 ];
