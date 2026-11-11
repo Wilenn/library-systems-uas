@@ -5,6 +5,14 @@
 
 @section('content')
     <x-page-header title="Detail peminjaman" :subtitle="'Transaksi #'.$borrowing->id">
+        @if ($borrowing->isBorrowed())
+            <form action="{{ route('borrowings.return', $borrowing) }}" method="POST">
+                @csrf
+                @method('PATCH')
+                <x-button type="submit"
+                    onclick="return confirm('Tandai semua buku pada transaksi ini sudah dikembalikan?')">Kembalikan buku</x-button>
+            </form>
+        @endif
         <x-button :href="route('borrowings.index')" variant="ghost">Kembali</x-button>
     </x-page-header>
 
