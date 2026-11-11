@@ -62,6 +62,17 @@ class Borrowing extends Model
         $query->where('status', self::STATUS_BORROWED);
     }
 
+    /** Belum dikembalikan dan sudah lewat jatuh tempo. */
+    public function scopeOverdue(Builder $query): void
+    {
+        $query->active()->whereDate('due_date', '<', today());
+    }
+
+    public function scopeReturned(Builder $query): void
+    {
+        $query->where('status', self::STATUS_RETURNED);
+    }
+
     public function isBorrowed(): bool
     {
         return $this->status === self::STATUS_BORROWED;
