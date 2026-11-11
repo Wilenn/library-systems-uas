@@ -99,4 +99,36 @@ class BorrowingController extends Controller
 
         return view('borrowings.show', compact('borrowing'));
     }
+
+    /**
+     * Mencatat pengembalian: status jadi returned, tanggal kembali diisi, dan stok semua
+     * buku pada transaksi ini bertambah kembali, dalam satu transaksi database.
+     * Baris peminjaman dikunci agar klik ganda tidak menambah stok dua kali.
+     */
+    public function returnBooks(Borrowing $borrowing)
+    {
+        $returned = DB::transaction(function () use ($borrowing) {
+            $current = Borrowing::whereKey($borrowing->getKey())->lockForUpdate()->firstOrFail();
+
+            if (! $current->isBorrowed()) {
+                return false;
+            }
+
+            $current->update([
+                'status' => Borrowing::STATUS_RETURNED,
+                'returned_at' => today(),
+            ]);
+
+            Book::whereIn('id', $current->books()->pluck('books.id'))->increment('stock');
+
+            return true;
+        });
+
+        if (! $returned) {
+            return back()->with('error', 'Peminjaman ini sudah dikembalikan sebelumnya.');
+        }
+
+        return redirect()->route('borrowings.show', $borrowing)
+            ->with('success', 'Pengembalian berhasil dicatat. Stok buku sudah ditambahkan kembali.');
+    }
 }
