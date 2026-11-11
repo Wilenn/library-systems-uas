@@ -6,7 +6,9 @@
 @section('content')
     @php($filtered = filled(request('q')) || filled(request('status')))
 
-    <x-page-header title="Peminjaman" subtitle="Riwayat dan status transaksi peminjaman buku." />
+    <x-page-header title="Peminjaman" subtitle="Riwayat dan status transaksi peminjaman buku.">
+        <x-button :href="route('borrowings.create')">Catat peminjaman</x-button>
+    </x-page-header>
 
     <form action="{{ route('borrowings.index') }}" method="GET" class="mb-5 flex flex-wrap items-end gap-3">
         <div class="w-full sm:w-64">
@@ -36,7 +38,9 @@
                 <x-button :href="route('borrowings.index')" variant="secondary">Reset pencarian</x-button>
             </x-empty-state>
         @else
-            <x-empty-state title="Belum ada peminjaman" message="Transaksi peminjaman akan muncul di sini." />
+            <x-empty-state title="Belum ada peminjaman" message="Transaksi peminjaman akan muncul di sini.">
+                <x-button :href="route('borrowings.create')">Catat peminjaman</x-button>
+            </x-empty-state>
         @endif
     @else
         <x-table>

@@ -38,6 +38,28 @@ document.addEventListener('submit', (event) => {
     });
 });
 
+// Form peminjaman: filter daftar buku saat mengetik (tanpa memuat ulang halaman)
+const bookFilter = document.getElementById('book-filter');
+
+if (bookFilter) {
+    const items = document.querySelectorAll('[data-book-item]');
+
+    bookFilter.addEventListener('input', () => {
+        const term = bookFilter.value.trim().toLowerCase();
+
+        items.forEach((item) => {
+            item.classList.toggle('hidden', !item.dataset.search.includes(term));
+        });
+    });
+
+    // Enter di kotak pencarian tidak boleh mengirim form peminjaman
+    bookFilter.addEventListener('keydown', (event) => {
+        if (event.key === 'Enter') {
+            event.preventDefault();
+        }
+    });
+}
+
 // Saat halaman dipulihkan lewat tombol Back, kembalikan tombol seperti semula
 window.addEventListener('pageshow', (event) => {
     if (!event.persisted) {

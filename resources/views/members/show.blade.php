@@ -5,6 +5,7 @@
 
 @section('content')
     <x-page-header :title="$member->name" subtitle="Detail anggota dan riwayat peminjaman.">
+        <x-button :href="route('borrowings.create', ['member' => $member->id])">Catat peminjaman</x-button>
         <x-button :href="route('members.edit', $member)" variant="secondary">Edit</x-button>
         <x-button :href="route('members.index')" variant="ghost">Kembali</x-button>
     </x-page-header>
