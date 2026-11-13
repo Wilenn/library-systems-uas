@@ -44,7 +44,19 @@ class DashboardActivityTest extends TestCase
             ->assertOk()
             ->assertViewHas('jumlahTerlambat', 1)
             ->assertViewHas('terlambat', fn ($list) => $list->pluck('member.name')->all() === ['Anggota Telat'])
-            ->assertSee('3 hari');
+            ->assertSee('Terlambat 3 hari');
+    }
+
+    public function test_both_lists_describe_the_same_borrowing_in_the_same_format(): void
+    {
+        $borrowing = Borrowing::factory()->for($this->memberNamed('Anggota Telat'))->overdue()->create();
+        $format = 'Jatuh tempo '.$borrowing->due_date->format('d/m/Y').' · 0 buku';
+
+        $content = $this->dashboard()->assertOk()->getContent();
+
+        // Transaksi yang sama muncul di dua daftar dengan keterangan yang persis sama.
+        $this->assertSame(2, substr_count($content, $format));
+        $this->assertSame(2, substr_count($content, 'Anggota Telat'));
     }
 
     public function test_overdue_list_is_limited_to_five_and_oldest_comes_first(): void

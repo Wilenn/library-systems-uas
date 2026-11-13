@@ -18,11 +18,11 @@
     <div class="mt-8 grid gap-6 lg:grid-cols-2">
         {{-- Peminjaman yang melewati jatuh tempo --}}
         <section>
-            <div class="mb-3 flex items-baseline justify-between gap-3">
-                <h2 class="text-base font-semibold text-stone-900">
+            <div class="mb-3 flex items-center justify-between gap-3">
+                <h2 class="flex items-center gap-2 text-base font-semibold text-stone-900">
                     Terlambat dikembalikan
                     @if ($jumlahTerlambat > 0)
-                        <x-badge color="red" class="ml-1">{{ $jumlahTerlambat }}</x-badge>
+                        <x-badge color="red">{{ $jumlahTerlambat }}</x-badge>
                     @endif
                 </h2>
 
@@ -37,15 +37,9 @@
                 @else
                     <ul class="divide-y divide-stone-100">
                         @foreach ($terlambat as $borrowing)
-                            <li>
-                                <a href="{{ route('borrowings.show', $borrowing) }}" class="flex items-center justify-between gap-3 px-5 py-3 hover:bg-stone-50">
-                                    <span class="min-w-0">
-                                        <span class="block truncate text-sm font-medium text-stone-900">{{ $borrowing->member->name }}</span>
-                                        <span class="block text-xs text-stone-500">{{ $borrowing->books_count }} buku · jatuh tempo {{ $borrowing->due_date->format('d/m/Y') }}</span>
-                                    </span>
-                                    <x-badge color="red">{{ $borrowing->daysOverdue() }} hari</x-badge>
-                                </a>
-                            </li>
+                            <x-borrowing-row :borrowing="$borrowing">
+                                <x-badge color="red">Terlambat {{ $borrowing->daysOverdue() }} hari</x-badge>
+                            </x-borrowing-row>
                         @endforeach
                     </ul>
                 @endif
@@ -54,7 +48,7 @@
 
         {{-- Peminjaman terbaru --}}
         <section>
-            <div class="mb-3 flex items-baseline justify-between gap-3">
+            <div class="mb-3 flex items-center justify-between gap-3">
                 <h2 class="text-base font-semibold text-stone-900">Peminjaman terbaru</h2>
 
                 @if ($terbaru->isNotEmpty())
@@ -68,15 +62,9 @@
                 @else
                     <ul class="divide-y divide-stone-100">
                         @foreach ($terbaru as $borrowing)
-                            <li>
-                                <a href="{{ route('borrowings.show', $borrowing) }}" class="flex items-center justify-between gap-3 px-5 py-3 hover:bg-stone-50">
-                                    <span class="min-w-0">
-                                        <span class="block truncate text-sm font-medium text-stone-900">{{ $borrowing->member->name }}</span>
-                                        <span class="block text-xs text-stone-500">{{ $borrowing->borrowed_at->format('d/m/Y') }} · {{ $borrowing->books_count }} buku</span>
-                                    </span>
-                                    <x-borrowing-status :borrowing="$borrowing" />
-                                </a>
-                            </li>
+                            <x-borrowing-row :borrowing="$borrowing">
+                                <x-borrowing-status :borrowing="$borrowing" />
+                            </x-borrowing-row>
                         @endforeach
                     </ul>
                 @endif
