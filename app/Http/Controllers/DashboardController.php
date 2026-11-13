@@ -3,21 +3,24 @@
 namespace App\Http\Controllers;
 
 use App\Models\Book;
-use App\Models\Category;
+use App\Models\Borrowing;
 use App\Models\Member;
 
 class DashboardController extends Controller
 {
     public function index()
     {
-        $jumlahBuku = Book::count();
-        $jumlahMember = Member::count();
-        $jumlahKategori = Category::count();
+        // Judul dan total stok diambil dalam satu query agregat.
+        $books = Book::toBase()
+            ->selectRaw('count(*) as titles, coalesce(sum(stock), 0) as stock')
+            ->first();
 
-        return view('dashboard.index', compact(
-            'jumlahBuku',
-            'jumlahMember',
-            'jumlahKategori'
-        ));
+        return view('dashboard.index', [
+            'jumlahJudul' => (int) $books->titles,
+            'jumlahStok' => (int) $books->stock,
+            'jumlahMember' => Member::count(),
+            // Transaksi yang bukunya belum dikembalikan (termasuk yang terlambat).
+            'jumlahDipinjam' => Borrowing::active()->count(),
+        ]);
     }
 }
