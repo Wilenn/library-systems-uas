@@ -82,4 +82,14 @@ class Borrowing extends Model
     {
         return $this->isBorrowed() && $this->due_date->lt(today());
     }
+
+    /** Jumlah hari lewat jatuh tempo (0 bila belum terlambat atau sudah dikembalikan). */
+    public function daysOverdue(): int
+    {
+        if (! $this->isOverdue()) {
+            return 0;
+        }
+
+        return intdiv(today()->getTimestamp() - $this->due_date->getTimestamp(), 86400);
+    }
 }
