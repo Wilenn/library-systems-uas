@@ -1,19 +1,15 @@
 @extends('layouts.app')
 
+@section('title', 'Dashboard')
+@section('modern', '1')
+
 @section('content')
+    <x-page-header title="Dashboard" :subtitle="'Halo, '.auth()->user()->name.'. Ringkasan perpustakaan hari ini.'" />
 
-    <h2>Dashboard</h2>
-
-    <p>Selamat datang di Library System.</p>
-
-    <p>Aplikasi sederhana untuk mengelola informasi perpustakaan.</p>
-
-    <h3>Data Perpustakaan</h3>
-
-    <ul>
-        <li>Jumlah Buku: {{ $jumlahBuku }}</li>
-        <li>Jumlah Member: {{ $jumlahMember }}</li>
-        <li>Jumlah Kategori: {{ $jumlahKategori }}</li>
-    </ul>
-
+    <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        <x-stat label="Judul buku" :value="$jumlahJudul" :href="route('books.index')" />
+        <x-stat label="Total stok buku" :value="$jumlahStok" :href="route('books.index')" hint="Eksemplar yang tersedia" />
+        <x-stat label="Anggota" :value="$jumlahMember" :href="route('members.index')" />
+        <x-stat label="Sedang dipinjam" :value="$jumlahDipinjam" :href="route('borrowings.index', ['status' => 'borrowed'])" hint="Transaksi belum dikembalikan" />
+    </div>
 @endsection
