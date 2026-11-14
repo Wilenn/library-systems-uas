@@ -1,7 +1,6 @@
 @extends('layouts.app')
 
 @section('title', 'Peminjaman')
-@section('modern', '1')
 
 @section('content')
     @php($filtered = filled(request('q')) || filled(request('status')))

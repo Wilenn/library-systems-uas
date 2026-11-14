@@ -1,7 +1,6 @@
 @extends('layouts.app')
 
 @section('title', 'Catat peminjaman')
-@section('modern', '1')
 
 @section('content')
     @php($selected = array_map('intval', (array) old('book_ids', [])))

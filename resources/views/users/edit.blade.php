@@ -1,7 +1,6 @@
 @extends('layouts.app')
 
 @section('title', 'Edit pengguna')
-@section('modern', '1')
 
 @section('content')
     <x-page-header title="Edit pengguna" :subtitle="$user->email" />

@@ -1,7 +1,6 @@
 @extends('layouts.app')
 
 @section('title', 'Dashboard')
-@section('modern', '1')
 
 @section('content')
     <x-page-header title="Dashboard" :subtitle="'Halo, '.auth()->user()->name.'. Ringkasan perpustakaan hari ini.'">

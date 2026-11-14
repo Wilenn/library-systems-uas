@@ -1,7 +1,6 @@
 @extends('layouts.app')
 
 @section('title', 'Edit anggota')
-@section('modern', '1')
 
 @section('content')
     <x-page-header title="Edit anggota" :subtitle="$member->name" />

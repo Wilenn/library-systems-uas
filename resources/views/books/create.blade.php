@@ -1,7 +1,6 @@
 @extends('layouts.app')
 
 @section('title', 'Tambah buku')
-@section('modern', '1')
 
 @section('content')
     <x-page-header title="Tambah buku" subtitle="Isi data buku baru dan tentukan kategorinya." />

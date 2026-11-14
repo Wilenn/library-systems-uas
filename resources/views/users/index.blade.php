@@ -1,7 +1,6 @@
 @extends('layouts.app')
 
 @section('title', 'Pengguna')
-@section('modern', '1')
 
 @section('content')
     <x-page-header title="Pengguna" subtitle="Kelola akun admin dan petugas.">
