@@ -1,7 +1,6 @@
 @extends('layouts.app')
 
 @section('title', $member->name)
-@section('modern', '1')
 
 @section('content')
     <x-page-header :title="$member->name" subtitle="Detail anggota dan riwayat peminjaman.">

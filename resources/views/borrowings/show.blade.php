@@ -1,7 +1,6 @@
 @extends('layouts.app')
 
 @section('title', 'Detail peminjaman')
-@section('modern', '1')
 
 @section('content')
     <x-page-header title="Detail peminjaman" :subtitle="'Transaksi #'.$borrowing->id">

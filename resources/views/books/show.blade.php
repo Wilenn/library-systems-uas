@@ -1,7 +1,6 @@
 @extends('layouts.app')
 
 @section('title', $book->title)
-@section('modern', '1')
 
 @section('content')
     <x-page-header :title="$book->title" :subtitle="$book->author">

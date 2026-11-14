@@ -64,4 +64,16 @@ class LayoutTest extends TestCase
             ->assertSee('Berhasil disimpan.')
             ->assertSee('Terjadi masalah.');
     }
+
+    public function test_no_page_uses_the_removed_temporary_legacy_styles(): void
+    {
+        $admin = User::factory()->admin()->create();
+
+        foreach (['dashboard', 'books.index', 'categories.index', 'members.index', 'borrowings.index', 'users.index'] as $route) {
+            $this->actingAs($admin)
+                ->get(route($route))
+                ->assertOk()
+                ->assertDontSee('legacy', false);
+        }
+    }
 }

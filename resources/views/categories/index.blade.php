@@ -1,7 +1,6 @@
 @extends('layouts.app')
 
 @section('title', 'Kategori')
-@section('modern', '1')
 
 @section('content')
     @php($canManage = auth()->user()->isAdmin())

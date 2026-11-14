@@ -1,7 +1,6 @@
 @extends('layouts.app')
 
 @section('title', 'Tambah kategori')
-@section('modern', '1')
 
 @section('content')
     <x-page-header title="Tambah kategori" />

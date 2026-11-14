@@ -1,7 +1,6 @@
 @extends('layouts.app')
 
 @section('title', 'Tambah anggota')
-@section('modern', '1')
 
 @section('content')
     <x-page-header title="Tambah anggota" subtitle="Daftarkan anggota baru perpustakaan." />
