@@ -8,12 +8,20 @@ use Illuminate\Database\Seeder;
 class MemberSeeder extends Seeder
 {
     /**
-     * Aman dijalankan berulang kali (firstOrCreate tidak membuat duplikat).
+     * Aman dijalankan berulang kali (dicari berdasarkan email).
      */
     public function run(): void
     {
-        foreach (['Wisnu', 'Bilal', 'Yuda', 'Dimas', 'Zorif'] as $name) {
-            Member::firstOrCreate(['name' => $name]);
+        $members = [
+            ['name' => 'Wisnu', 'email' => 'wisnu@example.com', 'phone' => '081200000001'],
+            ['name' => 'Bilal', 'email' => 'bilal@example.com', 'phone' => '081200000002'],
+            ['name' => 'Yuda', 'email' => 'yuda@example.com', 'phone' => '081200000003'],
+            ['name' => 'Dimas', 'email' => 'dimas@example.com', 'phone' => '081200000004'],
+            ['name' => 'Zorif', 'email' => 'zorif@example.com', 'phone' => '081200000005'],
+        ];
+
+        foreach ($members as $data) {
+            Member::firstOrCreate(['email' => $data['email']], $data);
         }
     }
 }

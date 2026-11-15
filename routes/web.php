@@ -2,9 +2,11 @@
 
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\BookController;
+use App\Http\Controllers\BorrowingController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\MemberController;
+use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
 Route::redirect('/', '/dashboard');
@@ -25,9 +27,18 @@ Route::middleware('auth')->group(function () {
 
     Route::get('/dashboard', [DashboardController::class, 'index'])
         ->name('dashboard');
+    Route::resource('borrowings', BorrowingController::class)->only(['index', 'create', 'store', 'show']);
+    Route::patch('borrowings/{borrowing}/return', [BorrowingController::class, 'returnBooks'])
+        ->name('borrowings.return');
     Route::resource('books', BookController::class);
     Route::get('/categories', [CategoryController::class, 'index'])
         ->name('categories.index');
-    Route::get('/members', [MemberController::class, 'index'])
-        ->name('members.index');
+    Route::resource('members', MemberController::class);
+
+    // Hanya admin yang boleh mengelola user dan mengubah kategori
+    // (petugas hanya boleh melihat daftar kategori).
+    Route::middleware('role:admin')->group(function () {
+        Route::resource('users', UserController::class)->except('show');
+        Route::resource('categories', CategoryController::class)->except(['index', 'show']);
+    });
 });

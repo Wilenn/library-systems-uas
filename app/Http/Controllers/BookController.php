@@ -5,14 +5,27 @@ namespace App\Http\Controllers;
 use App\Http\Requests\BookRequest;
 use App\Models\Book;
 use App\Models\Category;
+use Illuminate\Http\Request;
 
 class BookController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $books = Book::with('category')->latest()->latest('id')->paginate(10);
+        $books = Book::query()
+            ->with('category')
+            ->search($request->query('q'))
+            ->when(
+                $request->integer('category'),
+                fn ($query, $categoryId) => $query->where('category_id', $categoryId)
+            )
+            ->latest()
+            ->latest('id')
+            ->paginate(10)
+            ->withQueryString();
 
-        return view('books.index', compact('books'));
+        $categories = Category::orderBy('name')->get(['id', 'name']);
+
+        return view('books.index', compact('books', 'categories'));
     }
 
     public function create()
@@ -27,7 +40,7 @@ class BookController extends Controller
         Book::create($request->validated());
 
         return redirect()->route('books.index')
-            ->with('success', 'Data buku berhasil ditambahkan.');
+            ->with('success', 'Buku berhasil ditambahkan.');
     }
 
     public function show(Book $book)
@@ -49,14 +62,18 @@ class BookController extends Controller
         $book->update($request->validated());
 
         return redirect()->route('books.index')
-            ->with('success', 'Data buku berhasil diperbarui.');
+            ->with('success', 'Buku berhasil diperbarui.');
     }
 
     public function destroy(Book $book)
     {
+        if ($book->borrowings()->exists()) {
+            return back()->with('error', 'Buku tidak dapat dihapus karena memiliki riwayat peminjaman.');
+        }
+
         $book->delete();
 
         return redirect()->route('books.index')
-            ->with('success', 'Data buku berhasil dihapus.');
+            ->with('success', 'Buku berhasil dihapus.');
     }
 }
