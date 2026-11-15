@@ -9,6 +9,7 @@ use App\Models\Member;
 use App\Models\User;
 use Illuminate\Database\QueryException;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\Schema;
 use Tests\TestCase;
 
 class DatabaseFoundationTest extends TestCase
@@ -112,5 +113,11 @@ class DatabaseFoundationTest extends TestCase
         $this->assertTrue($late->isOverdue());
         $this->assertFalse($returned->isOverdue());
         $this->assertTrue($onTime->due_date->equalTo($onTime->borrowed_at->addDays(Borrowing::LOAN_DAYS)));
+    }
+
+    public function test_borrowing_indexes_support_status_and_date_queries(): void
+    {
+        $this->assertTrue(Schema::hasIndex('borrowings', ['status', 'due_date']));
+        $this->assertTrue(Schema::hasIndex('borrowings', ['borrowed_at']));
     }
 }
