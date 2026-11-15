@@ -145,8 +145,9 @@ Branch `main` berisi hasil akhir yang sudah stabil.
 ## Deployment
 
 * Set `APP_ENV=production` dan `APP_DEBUG=false` di `.env` agar detail error tidak tampil ke pengguna.
+* Bila diakses lewat HTTPS, set juga `SESSION_SECURE_COOKIE=true`.
 * Jalankan `npm run build` dan `php artisan migrate --force`.
-* Ganti password akun contoh atau hapus akunnya.
+* Ganti password akun contoh atau hapus akunnya, lalu jangan menjalankan `db:seed` di server produksi.
 
 ## Author
 
